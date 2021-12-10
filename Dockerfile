@@ -22,6 +22,7 @@ RUN echo "" >>.bashrc \
  && echo "" >>.bashrc \
  && echo 'export SPARK_HOME=/usr/local/spark-2.3.2-bin-hadoop2.7' >>.bashrc \
  && echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HADOOP_HOME/lib/native' >>.bashrc \
+ && echo 'export HADOOP_CONF_DIR=$SPARK_HOME/conf' >>.bashrc \
  && echo 'export PATH=$PATH:$SPARK_HOME/bin:$SPARK_HOME/sbin' >>.bashrc \
  && echo "" >>.bashrc \
  && echo 'export ZEPPL_HOME=/usr/local/zeppelin-0.9.0-bin-netinst' >>.bashrc \

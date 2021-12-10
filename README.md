@@ -151,7 +151,6 @@ spark.executor.memory  1536m
 
 Inside the Spark client container, run the following
 ```shell
-$ export HADOOP_CONF_DIR=$SPARK_HOME/conf
 $ spark-shell --master yarn
 2021-12-05 11:09:14 WARN  NativeCodeLoader:62 - Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
 Setting default log level to "WARN".
