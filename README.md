@@ -108,7 +108,7 @@ $ cat .ssh/authorized_keys
 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABg...QwJ3enC7dGplWvNvQeoMSiOGuMo0= root@8c331d607356
 ```
 
-Identify which Docker container started as Spark client and run the following docker exec command
+Identify which Docker container started as Zeppelin/Spark client and run the following docker exec command
 ```shell
 $ docker container ls   # run it in each node and check which <container ID> is running the Spark client constainer
 CONTAINER ID   IMAGE                                 COMMAND                  CREATED         STATUS         PORTS                                          NAMES
@@ -117,12 +117,12 @@ e9ceb97de97a   mkenjis/ubhdpclu_img:latest           "/usr/bin/supervisord"   4 
 $ docker container exec -it <container ID> bash
 ```
 
-Paste the public SSH key from Hadoop master container into Spark client container´s authorized_keys
+Paste the public SSH key from Hadoop master container into Zeppelin/Spark client container´s authorized_keys
 ```shell
 $ vi .ssh/authorized_keys    # paste the ssh key from Hadoop master
 ```
 
-Copy the setup_spark_files.sh into Hadoop master container and run it to copy the Hadoop conf files into Spark client container
+Copy the setup_spark_files.sh into Hadoop master container and run it to copy the Hadoop conf files into Zeppelin/Spark client container
 ```shell
 $ vi setup_spark_files.sh
 $ chmod u+x setup_spark_files.sh
@@ -141,7 +141,7 @@ hdfs-site.xml                                                      100%  310   2
 yarn-site.xml                                                      100%  771   701.6KB/s   00:00
 ```
 
-Add the following parameters to $SPARK_HOME/conf/spark-defaults.conf
+Inside the Zeppelin/Spark client container, add the following parameters to $SPARK_HOME/conf/spark-defaults.conf
 ```shell
 $ vi $SPARK_HOME/conf/spark-defaults.conf
 spark.driver.memory  1024m
@@ -149,28 +149,46 @@ spark.yarn.am.memory 1024m
 spark.executor.memory  1536m
 ```
 
-Inside the Spark client container, run the following
+Change Zeppelin default binding address to 0.0.0.0 in $ZEPPL_HOME/conf/zeppelin-site.xml
 ```shell
-$ spark-shell --master yarn
-2021-12-05 11:09:14 WARN  NativeCodeLoader:62 - Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
-Setting default log level to "WARN".
-To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
-2021-12-05 11:09:40 WARN  Client:66 - Neither spark.yarn.jars nor spark.yarn.archive is set, falling back to uploading libraries under SPARK_HOME.
-Spark context Web UI available at http://802636b4d2b4:4040
-Spark context available as 'sc' (master = yarn, app id = application_1638723680963_0001).
-Spark session available as 'spark'.
-Welcome to
-      ____              __
-     / __/__  ___ _____/ /__
-    _\ \/ _ \/ _ `/ __/  '_/
-   /___/ .__/\_,_/_/ /_/\_\   version 2.3.2
-      /_/
-         
-Using Scala version 2.11.8 (Java HotSpot(TM) 64-Bit Server VM, Java 1.8.0_181)
-Type in expressions to have them evaluated.
-Type :help for more information.
+$ cd $ZEPPL_HOME/conf   # this changes to /usr/local/zeppelin-0.9.0-bin-netinst/con
+$ ls   
+configuration.xsl  log4j.properties2              zeppelin-env.cmd.template
+interpreter-list   log4j2.properties              zeppelin-env.sh.template
+interpreter.json   log4j_yarn_cluster.properties  zeppelin-site.xml.template
+log4j.properties   shiro.ini.template
+$ cp zeppelin-site.xml.template zeppelin-site.xml         
+$ vi zeppelin-site.xml  # change the binding address to 0.0.0.0
 
-scala> 
+<property>
+  <name>zeppelin.server.addr</name>
+  <value>0.0.0.0</value>
+  <description>Server binding address</description>
+</property>
 ```
+
+Start the Zeppelin service running the following
+```shell
+$ $ZEPPL_HOME/bin/zeppelin-daemon.sh start
+Zeppelin start                                             [  OK  ]
+$
+```
+
+In the browser, issue the address https://<host>:8080 to access the Zeppelin Notebook.
+
+Click on anonymous -> Interpreter and the look for spark framework.
+
+Setup the following parameters :
+spark.master = yarn
+spark.submit.deployMode = client
+spark.driver.memory  1024m
+spark.yarn.am.memory 1024m
+spark.executor.memory  1536m
+
+Click on Save and OK to update and restart Zeppelin
+
+Create a new notebook and issue spark commands
+
+
 
 
