@@ -1,0 +1,36 @@
+version: "3.1"
+
+services:
+  spk_cli:
+    image: mkenjis/ubzepp_img
+    environment:
+      - HADOOP_HOSTNAME=hdpmst
+    ports:
+      - 8080:8080
+    networks:
+      - mynet
+    depends_on:
+      - hdpmst
+  hdpmst:
+    image: mkenjis/ubhdpclu_img
+    networks:
+      - mynet
+    environment:
+      - HADOOP_HOST_SLAVES=hdp1,hdp2,hdp3
+    depends_on:
+      - hdp1,hdp2,hdp3
+  hdp1:
+    image: mkenjis/ubhdpclu_img
+    networks:
+      - mynet
+  hdp2:
+    image: mkenjis/ubhdpclu_img
+    networks:
+      - mynet
+  hdp3:
+    image: mkenjis/ubhdpclu_img
+    networks:
+      - mynet
+
+networks:
+  mynet:
