@@ -1,18 +1,21 @@
-# Spark client running into YARN cluster in Docker
+# Zeppelin client running into YARN cluster in Docker
+
+Zeppelin is a web-based notebook which brings data exploration, visualization, sharing and collaboration features to Spark.
 
 Apache Spark is an open-source, distributed processing system used for big data workloads.
 
-In this demo, a Spark container uses a Hadoop YARN cluster as a resource management and job scheduling technology to perform distributed data processing.
+In this demo, a Zeppelin/Spark container uses a Hadoop YARN cluster as a resource management and job scheduling technology to perform distributed data processing.
 
-This Docker image contains Spark binaries prebuilt and uploaded in Docker Hub.
+This Docker image contains Zeppeling and Spark binaries prebuilt and uploaded in Docker Hub.
 
 ## Steps to Build Spark image
 
-To build a Spark image to run on a YARN cluster, follow the steps below :
+To build a Zeppelin/Spark image to run on a YARN cluster, follow the steps below :
 ```shell
 $ git clone https://github.com/mkenjis/apache_binaries
 $ wget https://archive.apache.org/dist/spark/spark-2.3.2/spark-2.3.2-bin-hadoop2.7.tgz
-$ docker image build -t mkenjis/ubspkcluster1_img
+$ wget https://downloads.apache.org/zeppelin/zeppelin-0.9.0/zeppelin-0.9.0-bin-netinst.tgz
+$ docker image build -t mkenjis/ubzepp_img
 $ docker login
 Login with your Docker ID to push and pull images from Docker Hub. If you don't have a Docker ID, head over to https://hub.docker.com to create one.
 Username: mkenjis
@@ -22,7 +25,7 @@ Configure a credential helper to remove this warning. See
 https://docs.docker.com/engine/reference/commandline/login/#credentials-store
 
 Login Succeeded
-$ docker image push mkenjis/ubspkcluster1_img
+$ docker image push mkenjis/ubzepp_img
 ```
 
 ## Shell Scripts Inside 
@@ -85,7 +88,7 @@ io5i950qp0ac   yarn_hdp1      replicated   0/1        mkenjis/ubhdpclu_img:lates
 npmcnr3ihmb4   yarn_hdp2      replicated   0/1        mkenjis/ubhdpclu_img:latest           
 uywev8oekd5h   yarn_hdp3      replicated   0/1        mkenjis/ubhdpclu_img:latest           
 p2hkdqh39xd2   yarn_hdpmst    replicated   1/1        mkenjis/ubhdpclu_img:latest           
-xf8qop5183mj   yarn_spk_cli   replicated   0/1        mkenjis/ubspkcluster1_img:latest
+xf8qop5183mj   yarn_spk_cli   replicated   0/1        mkenjis/ubzepp_img:latest
 ```
 
 ## Set up steps on Docker Containers
@@ -109,7 +112,7 @@ Identify which Docker container started as Spark client and run the following do
 ```shell
 $ docker container ls   # run it in each node and check which <container ID> is running the Spark client constainer
 CONTAINER ID   IMAGE                                 COMMAND                  CREATED         STATUS         PORTS                                          NAMES
-8f0eeca49d0f   mkenjis/ubspkcluster1_img:latest   "/usr/bin/supervisord"   3 minutes ago   Up 3 minutes   4040/tcp, 7077/tcp, 8080-8082/tcp, 10000/tcp   yarn_spk_cli.1.npllgerwuixwnb9odb3z97tuh
+8f0eeca49d0f   mkenjis/ubzepp_img:latest   "/usr/bin/supervisord"   3 minutes ago   Up 3 minutes   4040/tcp, 7077/tcp, 8080-8082/tcp, 10000/tcp   yarn_spk_cli.1.npllgerwuixwnb9odb3z97tuh
 e9ceb97de97a   mkenjis/ubhdpclu_img:latest           "/usr/bin/supervisord"   4 minutes ago   Up 4 minutes   9000/tcp                                       yarn_hdp1.1.58koqncyw79aaqhirapg502os
 $ docker container exec -it <container ID> bash
 ```
