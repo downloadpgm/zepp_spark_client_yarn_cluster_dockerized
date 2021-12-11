@@ -6,11 +6,11 @@ Apache Spark is an open-source, distributed processing system used for big data 
 
 In this demo, a Zeppelin/Spark container uses a Hadoop YARN cluster as a resource management and job scheduling technology to perform distributed data processing.
 
-This Docker image contains Zeppeling and Spark binaries prebuilt and uploaded in Docker Hub.
+This Docker image contains Zeppelin and Spark binaries prebuilt and uploaded in Docker Hub.
 
-## Steps to Build Spark image
+## Steps to Build Zeppelin/Spark image
 
-To build a Zeppelin/Spark image to run on a YARN cluster, follow the steps below :
+To build a Zeppelin/Spark Docker image, follow the steps below :
 ```shell
 $ git clone https://github.com/mkenjis/apache_binaries
 $ wget https://archive.apache.org/dist/spark/spark-2.3.2/spark-2.3.2-bin-hadoop2.7.tgz
@@ -30,24 +30,12 @@ $ docker image push mkenjis/ubzepp_img
 
 ## Shell Scripts Inside 
 
-> run_hadoop.sh
+> run_zeppl.sh
 
-Sets up the environment for the YARN cluster by executing the following steps :
-- sets environment variables for HADOOP and YARN
-- starts the SSH service and scans the slave nodes for passwordless SSH
-- copies the Hadoop configuration files to slave nodes
-- initializes the HDFS filesystem
-- starts Hadoop Name node and Data nodes
-- starts YARN Resource and Node managers
-
-> create_conf_files.sh
-
-Creates the following Hadoop files $HADOOP/etc/hadoop directory :
-- core-site.xml
-- hdfs-site.xml
-- mapred-site.xml
-- yarn-site.xml
-- hadoop-env.sh
+Sets up the environment for Zeppelin to get started by executing the following steps :
+- sets environment variables for JAVA and ZEPPELIN
+- starts the SSH service for passwordless SSH
+- starts Zeppelin daemon
 
 ## Initial Steps on Docker Swarm
 
@@ -75,7 +63,7 @@ $ docker node promote node3
 $ docker node promote ...
 ```
 
-Start the YARN cluster by creating a Docker stack 
+Start the Zeppelin and YARN cluster by creating a Docker stack 
 ```shell
 $ docker stack deploy -c docker-compose.yml yarn
 ```
@@ -174,7 +162,7 @@ Zeppelin start                                             [  OK  ]
 $
 ```
 
-In the browser, issue the address https://<host>:8080 to access the Zeppelin Notebook.
+In the browser, issue the address https://host:8080 to access the Zeppelin Notebook.
 
 Click on anonymous -> Interpreter and the look for spark framework.
 
