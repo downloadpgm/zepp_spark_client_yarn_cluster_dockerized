@@ -164,24 +164,31 @@ $
 
 In the browser, issue the address https://host:8080 to access the Zeppelin Notebook.
 
+At upper right corner, click on anonymous -> Interpreter.
+
 ![ZEPPELIN home](docs/hdinsight-hive-zeppelin.png)
 
-At upper right corner, click on anonymous -> Interpreter. It shows many interpreters Zeppelin can work. Look for spark framework.
+It shows many interpreters Zeppelin can work. Scroll down and look for spark framework.
 
 ![ZEPPELIN interpreter](docs/zeppelin-anon-interpreters.png)
 
-Setup the following parameters :
+Click on "edit" button and setup the following parameters :
 ```shell
 spark.master = yarn
 spark.submit.deployMode = client
-spark.driver.memory  1024m
-spark.yarn.am.memory 1024m
-spark.executor.memory  1536m
+spark.driver.memory = 1024m
+spark.yarn.am.memory = 1024m
+spark.executor.memory = 1536m
 ```
 
 Click on Save -> OK to update and restart Zeppelin
 
-Create a new notebook and issue spark commands
+Create a new notebook clicking on Notebook -> Create New Note and provide the following as shown
+
+![ZEPPELIN query](docs/hdinsight-hive-zeppelin-create-notebook1.png)
+![ZEPPELIN query](docs/hdinsight-hive-zeppelin-create-notebook2.png)
+
+Issue Spark commands
 
 ![ZEPPELIN query](docs/hdinsight-hive-zeppelin-query.png)
 
