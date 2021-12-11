@@ -164,11 +164,11 @@ $
 
 In the browser, issue the address https://host:8080 to access the Zeppelin Notebook.
 
-(docs/hdinsight-hive-zeppelin.png)
+![ZEPPELIN home](docs/hdinsight-hive-zeppelin.png)
 
 At upper right corner, click on anonymous -> Interpreter. It shows many interpreters Zeppelin can work. Look for spark framework.
 
-(docs/zeppelin-anon-interpreters.png)
+![ZEPPELIN interpreter](docs/zeppelin-anon-interpreters.png)
 
 Setup the following parameters :
 ```shell
@@ -183,7 +183,7 @@ Click on Save -> OK to update and restart Zeppelin
 
 Create a new notebook and issue spark commands
 
-(docs/hdinsight-hive-zeppelin-query.png)
+![ZEPPELIN query](docs/hdinsight-hive-zeppelin-query.png)
 
 
 
