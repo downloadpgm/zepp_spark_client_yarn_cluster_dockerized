@@ -167,11 +167,13 @@ In the browser, issue the address https://host:8080 to access the Zeppelin Noteb
 Click on anonymous -> Interpreter and the look for spark framework.
 
 Setup the following parameters :
+```shell
 spark.master = yarn
 spark.submit.deployMode = client
 spark.driver.memory  1024m
 spark.yarn.am.memory 1024m
 spark.executor.memory  1536m
+```
 
 Click on Save and OK to update and restart Zeppelin
 
