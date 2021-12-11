@@ -164,7 +164,7 @@ $
 
 In the browser, issue the address https://host:8080 to access the Zeppelin Notebook.
 
-Click on anonymous -> Interpreter and the look for spark framework.
+At upper right corner, click on anonymous -> Interpreter. It shows many interpreters Zeppelin can work. Look for spark framework.
 
 Setup the following parameters :
 ```shell
@@ -175,7 +175,7 @@ spark.yarn.am.memory 1024m
 spark.executor.memory  1536m
 ```
 
-Click on Save and OK to update and restart Zeppelin
+Click on Save -> OK to update and restart Zeppelin
 
 Create a new notebook and issue spark commands
 
