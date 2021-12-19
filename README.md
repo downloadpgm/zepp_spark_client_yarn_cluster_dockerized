@@ -90,26 +90,6 @@ a8f16303d872   mkenjis/ubhdpclu_img:latest   "/usr/bin/supervisord"   About a mi
 $ docker container exec -it <container ID> bash
 ```
 
-Inside the Hadoop master container, get the public SSH key
-```shell
-$ cat .ssh/authorized_keys
-ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABg...QwJ3enC7dGplWvNvQeoMSiOGuMo0= root@8c331d607356
-```
-
-Identify which Docker container started as Zeppelin/Spark client and run the following docker exec command
-```shell
-$ docker container ls   # run it in each node and check which <container ID> is running the Spark client constainer
-CONTAINER ID   IMAGE                                 COMMAND                  CREATED         STATUS         PORTS                                          NAMES
-8f0eeca49d0f   mkenjis/ubzepp_img:latest   "/usr/bin/supervisord"   3 minutes ago   Up 3 minutes   4040/tcp, 7077/tcp, 8080-8082/tcp, 10000/tcp   yarn_spk_cli.1.npllgerwuixwnb9odb3z97tuh
-e9ceb97de97a   mkenjis/ubhdpclu_img:latest           "/usr/bin/supervisord"   4 minutes ago   Up 4 minutes   9000/tcp                                       yarn_hdp1.1.58koqncyw79aaqhirapg502os
-$ docker container exec -it <container ID> bash
-```
-
-Paste the public SSH key from Hadoop master container into Zeppelin/Spark client container´s authorized_keys
-```shell
-$ vi .ssh/authorized_keys    # paste the ssh key from Hadoop master
-```
-
 Copy the setup_spark_files.sh into Hadoop master container and run it to copy the Hadoop conf files into Zeppelin/Spark client container
 ```shell
 $ vi setup_spark_files.sh
@@ -127,6 +107,15 @@ Warning: Permanently added 'spk_cli,10.0.2.11' (ECDSA) to the list of known host
 core-site.xml                                                      100%  137    75.8KB/s   00:00    
 hdfs-site.xml                                                      100%  310   263.4KB/s   00:00    
 yarn-site.xml                                                      100%  771   701.6KB/s   00:00
+```
+
+Identify which Docker container started as Zeppelin/Spark client and run the following docker exec command
+```shell
+$ docker container ls   # run it in each node and check which <container ID> is running the Spark client constainer
+CONTAINER ID   IMAGE                                 COMMAND                  CREATED         STATUS         PORTS                                          NAMES
+8f0eeca49d0f   mkenjis/ubzepp_img:latest   "/usr/bin/supervisord"   3 minutes ago   Up 3 minutes   4040/tcp, 7077/tcp, 8080-8082/tcp, 10000/tcp   yarn_spk_cli.1.npllgerwuixwnb9odb3z97tuh
+e9ceb97de97a   mkenjis/ubhdpclu_img:latest           "/usr/bin/supervisord"   4 minutes ago   Up 4 minutes   9000/tcp                                       yarn_hdp1.1.58koqncyw79aaqhirapg502os
+$ docker container exec -it <container ID> bash
 ```
 
 Inside the Zeppelin/Spark client container, add the following parameters to $SPARK_HOME/conf/spark-defaults.conf
