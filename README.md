@@ -79,7 +79,7 @@ p2hkdqh39xd2   yarn_hdpmst    replicated   1/1        mkenjis/ubhdpclu_img:lates
 xf8qop5183mj   yarn_spk_cli   replicated   0/1        mkenjis/ubzepp_img:latest
 ```
 
-## Set up steps on Docker Containers
+## Steps to Set up Zeppelin/Spark client container
 
 Identify which Docker container started as Hadoop master and run the following docker exec command
 ```shell
