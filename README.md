@@ -9,8 +9,6 @@ In this demo, a Zeppelin/Spark container uses a Hadoop YARN cluster as a resourc
 This Docker image contains Zeppelin and Spark binaries prebuilt and uploaded in Docker Hub.
 
 ## Steps to Build Zeppelin/Spark image
-
-To build a Zeppelin/Spark Docker image, follow the steps below :
 ```shell
 $ git clone https://github.com/mkenjis/apache_binaries
 $ wget https://archive.apache.org/dist/spark/spark-2.3.2/spark-2.3.2-bin-hadoop2.7.tgz
@@ -51,24 +49,24 @@ To add a worker to this swarm, run the following command:
 To add a manager to this swarm, run 'docker swarm join-token manager' and follow the instructions.
 ```
 
-Add more workers in two or more hosts (node2, node3, ...) by joining them to manager running the following command in each node.
+Add more workers in cluster hosts (node2, node3, ...) by joining them to manager.
 ```shell
 $ docker swarm join --token <token> <IP node1>:2377
 ```
 
-Change the workers as managers in node2, node3, ... running the following in node1.
+Change the workers as managers in node2, node3, ...
 ```shell
 $ docker node promote node2
 $ docker node promote node3
 $ docker node promote ...
 ```
 
-Start the Zeppelin and YARN cluster by creating a Docker stack 
+Start Docker stack using docker-compose.yml 
 ```shell
 $ docker stack deploy -c docker-compose.yml yarn
 ```
 
-Check the status of each service started running the following
+Check the status of each service started
 ```shell
 $ docker service ls
 ID             NAME           MODE         REPLICAS   IMAGE                                 PORTS
@@ -81,12 +79,13 @@ xf8qop5183mj   yarn_spk_cli   replicated   0/1        mkenjis/ubzepp_img:latest
 
 ## Steps to Set up Zeppelin/Spark client container
 
-Identify which Docker container started as Hadoop master and run the following docker exec command
+Identify which Docker container started as Hadoop master and logged into it
 ```shell
 $ docker container ls   # run it in each node and check which <container ID> is running the Hadoop master constainer
 CONTAINER ID   IMAGE                         COMMAND                  CREATED              STATUS              PORTS      NAMES
 a8f16303d872   mkenjis/ubhdpclu_img:latest   "/usr/bin/supervisord"   About a minute ago   Up About a minute   9000/tcp   yarn_hdp2.1.kumbfub0cl20q3jhdyrcep4eb
 77fae0c411ce   mkenjis/ubhdpclu_img:latest   "/usr/bin/supervisord"   About a minute ago   Up About a minute   9000/tcp   yarn_hdpmst.1.r81pn190785n1hdktvrnovw86
+
 $ docker container exec -it <container ID> bash
 ```
 
@@ -109,16 +108,17 @@ hdfs-site.xml                                                      100%  310   2
 yarn-site.xml                                                      100%  771   701.6KB/s   00:00
 ```
 
-Identify which Docker container started as Zeppelin/Spark client and run the following docker exec command
+Identify which Docker container started as Zeppelin/Spark client and logged into it
 ```shell
 $ docker container ls   # run it in each node and check which <container ID> is running the Spark client constainer
 CONTAINER ID   IMAGE                                 COMMAND                  CREATED         STATUS         PORTS                                          NAMES
 8f0eeca49d0f   mkenjis/ubzepp_img:latest   "/usr/bin/supervisord"   3 minutes ago   Up 3 minutes   4040/tcp, 7077/tcp, 8080-8082/tcp, 10000/tcp   yarn_spk_cli.1.npllgerwuixwnb9odb3z97tuh
 e9ceb97de97a   mkenjis/ubhdpclu_img:latest           "/usr/bin/supervisord"   4 minutes ago   Up 4 minutes   9000/tcp                                       yarn_hdp1.1.58koqncyw79aaqhirapg502os
+
 $ docker container exec -it <container ID> bash
 ```
 
-Inside the Zeppelin/Spark client container, add the following parameters to $SPARK_HOME/conf/spark-defaults.conf
+Add the following parameters to $SPARK_HOME/conf/spark-defaults.conf
 ```shell
 $ vi $SPARK_HOME/conf/spark-defaults.conf
 spark.driver.memory  1024m
