@@ -144,7 +144,7 @@ $ vi zeppelin-site.xml  # change the binding address to 0.0.0.0
 </property>
 ```
 
-Start the Zeppelin service running the following
+Start the Zeppelin service
 ```shell
 $ $ZEPPL_HOME/bin/zeppelin-daemon.sh start
 Zeppelin start                                             [  OK  ]
