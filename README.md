@@ -90,6 +90,7 @@ $ docker container exec -it <container ID> bash
 ```
 
 Copy the setup_spark_files.sh into Hadoop master container.
+
 Run it to copy the Hadoop conf files into Zeppelin/Spark client container.
 ```shell
 $ vi setup_spark_files.sh
