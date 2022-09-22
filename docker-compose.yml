@@ -7,8 +7,6 @@ services:
       - type: bind
         source: /root/.ssh
         target: /root/.ssh
-    environment:
-      - HADOOP_HOSTNAME=hdpmst
     ports:
       - 8080:8080
     networks:
