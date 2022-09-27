@@ -72,7 +72,7 @@ hdfs-site.xml                                                      100%  310   2
 yarn-site.xml                                                      100%  771   701.6KB/s   00:00
 ```
 
-2. access spark client node and add parameters to spark-defaults.conf (in spark client)
+2. access spark client node and add parameters to spark-defaults.conf
 ```shell
 $ docker container ls   # run it in each node and check which <container ID> is running the Spark client constainer
 CONTAINER ID   IMAGE                                 COMMAND                  CREATED         STATUS         PORTS                                          NAMES
