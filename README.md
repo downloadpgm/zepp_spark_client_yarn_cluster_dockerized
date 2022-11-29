@@ -13,7 +13,7 @@ This Docker image contains Zeppelin and Spark binaries prebuilt and uploaded in 
 $ git clone https://github.com/mkenjis/apache_binaries
 $ wget https://archive.apache.org/dist/spark/spark-2.3.2/spark-2.3.2-bin-hadoop2.7.tgz
 $ wget https://downloads.apache.org/zeppelin/zeppelin-0.9.0/zeppelin-0.9.0-bin-netinst.tgz
-$ docker image build -t mkenjis/ubzepp_img
+$ docker image build -t mkenjis/ubzepp_img .
 $ docker login   # provide user and password
 $ docker image push mkenjis/ubzepp_img
 ```
