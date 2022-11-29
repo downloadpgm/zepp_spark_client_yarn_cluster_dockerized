@@ -10,7 +10,6 @@ This Docker image contains Zeppelin and Spark binaries prebuilt and uploaded in 
 
 ## Build Zeppelin/Spark image
 ```shell
-$ git clone https://github.com/mkenjis/apache_binaries
 $ wget https://archive.apache.org/dist/spark/spark-2.3.2/spark-2.3.2-bin-hadoop2.7.tgz
 $ wget https://downloads.apache.org/zeppelin/zeppelin-0.9.0/zeppelin-0.9.0-bin-netinst.tgz
 $ docker image build -t mkenjis/ubzepp_img .
@@ -35,44 +34,45 @@ $ docker swarm init --advertise-addr <IP node1>
 $ docker swarm join-token manager  # issue a token to add a node as manager to swarm
 ```
 
-2. add more managers in swarm cluster (node2, node3, ...)
+2. add 3 more workers in swarm cluster (node2, node3, node4)
 ```shell
-$ docker swarm join --token <token> <IP nodeN>:2377
+$ docker swarm join --token <token> <IP node1>:2377
+```
+
+3. label each node to anchor each container in swarm cluster
+```shell
+docker node update --label-add hostlabel=hdpmst node1
+docker node update --label-add hostlabel=hdp1 node2
+docker node update --label-add hostlabel=hdp2 node3
+docker node update --label-add hostlabel=hdp3 node4
+```
+
+4. create an external "overlay" network in swarm to link the 2 stacks (hdp and spk)
+```shell
+docker network create --driver overlay mynet
+```
+
+5. start the Hadoop cluster (with HDFS and YARN)
+```shell
+$ docker stack deploy -c docker-compose-hdp.yml hdp
+$ docker stack ps hdp
+jeti90luyqrb   hdp_hdp1.1     mkenjis/ubhdpclu_vol_img:latest   node2     Running         Preparing 39 seconds ago             
+tosjcz96hnj9   hdp_hdp2.1     mkenjis/ubhdpclu_vol_img:latest   node3     Running         Preparing 38 seconds ago             
+t2ooig7fbt9y   hdp_hdp3.1     mkenjis/ubhdpclu_vol_img:latest   node4     Running         Preparing 39 seconds ago             
+wym7psnwca4n   hdp_hdpmst.1   mkenjis/ubhdpclu_vol_img:latest   node1     Running         Preparing 39 seconds ago
 ```
 
 3. start a spark standalone cluster and spark client
 ```shell
-$ docker stack deploy -c docker-compose.yml yarn
+$ docker stack deploy -c docker-compose.yml spk
 $ docker service ls
 ID             NAME           MODE         REPLICAS   IMAGE                                 PORTS
-io5i950qp0ac   yarn_hdp1      replicated   0/1        mkenjis/ubhdpclu_img:latest           
-npmcnr3ihmb4   yarn_hdp2      replicated   0/1        mkenjis/ubhdpclu_img:latest           
-uywev8oekd5h   yarn_hdp3      replicated   0/1        mkenjis/ubhdpclu_img:latest           
-p2hkdqh39xd2   yarn_hdpmst    replicated   1/1        mkenjis/ubhdpclu_img:latest           
-xf8qop5183mj   yarn_spk_cli   replicated   0/1        mkenjis/ubzepp_img:latest
+xf8qop5183mj   spk_spk_cli   replicated   0/1        mkenjis/ubzepp_img:latest
 ```
 
 ## Set up Zeppelin/Spark client
 
-1. access hadoop master node and copy hadoop conf files to spark client
-```shell
-$ docker container ls   # run in each node to identify hdpmst constainer
-CONTAINER ID   IMAGE                         COMMAND                  CREATED              STATUS              PORTS      NAMES
-a8f16303d872   mkenjis/ubhdpclu_img:latest   "/usr/bin/supervisord"   About a minute ago   Up About a minute   9000/tcp   yarn_hdp2.1.kumbfub0cl20q3jhdyrcep4eb
-77fae0c411ce   mkenjis/ubhdpclu_img:latest   "/usr/bin/supervisord"   About a minute ago   Up About a minute   9000/tcp   yarn_hdpmst.1.r81pn190785n1hdktvrnovw86
-
-$ docker container exec -it <hdpmst container ID> bash
-
-$ vi setup_spark_files.sh
-$ chmod u+x setup_spark_files.sh
-$ ./setup_spark_files.sh
-Warning: Permanently added 'spk_cli,10.0.2.11' (ECDSA) to the list of known hosts.
-core-site.xml                                                      100%  137    75.8KB/s   00:00    
-hdfs-site.xml                                                      100%  310   263.4KB/s   00:00    
-yarn-site.xml                                                      100%  771   701.6KB/s   00:00
-```
-
-2. access spark client node and add parameters to spark-defaults.conf
+1. access spark client node and add parameters to spark-defaults.conf
 ```shell
 $ docker container ls   # run it in each node and check which <container ID> is running the Spark client constainer
 CONTAINER ID   IMAGE                                 COMMAND                  CREATED         STATUS         PORTS                                          NAMES
@@ -87,7 +87,7 @@ spark.yarn.am.memory 1024m
 spark.executor.memory  1536m
 ```
 
-3. set Zeppelin binding address to 0.0.0.0 in $ZEPPL_HOME/conf/zeppelin-site.xml
+2. set Zeppelin binding address to 0.0.0.0 in $ZEPPL_HOME/conf/zeppelin-site.xml
 ```shell
 $ cd $ZEPPL_HOME/conf   # this changes to /usr/local/zeppelin-0.9.0-bin-netinst/con
 $ ls   
@@ -105,14 +105,14 @@ $ vi zeppelin-site.xml  # change the binding address to 0.0.0.0
 </property>
 ```
 
-4. start the Zeppelin service
+3. start the Zeppelin service
 ```shell
 $ $ZEPPL_HOME/bin/zeppelin-daemon.sh start
 Zeppelin start                                             [  OK  ]
 $
 ```
 
-5. in the browser, issue the address https://host:8080 to access the Zeppelin Notebook.
+4. in the browser, issue the address https://host:8080 to access the Zeppelin Notebook.
 
 At upper right corner, click on anonymous -> Interpreter.
 
