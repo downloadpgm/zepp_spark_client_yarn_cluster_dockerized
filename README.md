@@ -90,11 +90,6 @@ spark.executor.memory  1536m
 2. set Zeppelin binding address to 0.0.0.0 in $ZEPPL_HOME/conf/zeppelin-site.xml
 ```shell
 $ cd $ZEPPL_HOME/conf   # this changes to /usr/local/zeppelin-0.9.0-bin-netinst/con
-$ ls   
-configuration.xsl  log4j.properties2              zeppelin-env.cmd.template
-interpreter-list   log4j2.properties              zeppelin-env.sh.template
-interpreter.json   log4j_yarn_cluster.properties  zeppelin-site.xml.template
-log4j.properties   shiro.ini.template
 $ cp zeppelin-site.xml.template zeppelin-site.xml         
 $ vi zeppelin-site.xml  # change the binding address to 0.0.0.0
 
