@@ -17,15 +17,6 @@ $ docker login   # provide user and password
 $ docker image push mkenjis/ubzepp_img
 ```
 
-## Shell Scripts Inside 
-
-> run_zeppl.sh
-
-Sets up the environment for Zeppelin to get started by executing the following steps :
-- sets environment variables for JAVA and ZEPPELIN
-- starts the SSH service for passwordless SSH
-- starts Zeppelin daemon
-
 ## Start Swarm cluster
 
 1. start swarm mode in node1
