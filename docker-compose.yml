@@ -11,6 +11,8 @@ services:
       - 8080:8080
     networks:
       - mynet
+    environment:
+      - HADOOP_HOST_MASTER=hdpmst
 
 networks:
   mynet:
