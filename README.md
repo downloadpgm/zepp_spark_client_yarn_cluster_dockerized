@@ -64,11 +64,6 @@ xf8qop5183mj   spk_spk_cli   replicated   0/1        mkenjis/ubzepp_img:latest
 
 1. access spark client node
 ```shell
-$ docker container ls   # run it in each node and check which <container ID> is running the Spark client constainer
-CONTAINER ID   IMAGE                                 COMMAND                  CREATED         STATUS         PORTS                                          NAMES
-8f0eeca49d0f   mkenjis/ubzepp_img:latest   "/usr/bin/supervisord"   3 minutes ago   Up 3 minutes   4040/tcp, 7077/tcp, 8080-8082/tcp, 10000/tcp   yarn_spk_cli.1.npllgerwuixwnb9odb3z97tuh
-e9ceb97de97a   mkenjis/ubhdpclu_img:latest           "/usr/bin/supervisord"   4 minutes ago   Up 4 minutes   9000/tcp                                       yarn_hdp1.1.58koqncyw79aaqhirapg502os
-
 $ docker container exec -it <spk_cli ID> bash
 ```
 
